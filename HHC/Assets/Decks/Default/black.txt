@@ -1,0 +1,3 @@
+card 1 ____ 1 blank
+card 2 ____ 2 blanks ____
+card 3 no blanks
