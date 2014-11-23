@@ -6,7 +6,22 @@ public class TextMeshWrapper : MonoBehaviour
     /// <summary>
     /// The textmesh to wrap the text of
     /// </summary>
-    private TextMesh textMesh;
+    private TextMesh TextMesh
+    {
+        get
+        {
+            return _textMesh;
+        }
+        set
+        {
+            _textMesh = value;
+            if (value != null)
+            {
+                UpdateText();
+            }
+        }
+    }
+    private TextMesh _textMesh;
 
     /// <summary>
     /// The parent of this object
@@ -20,14 +35,22 @@ public class TextMeshWrapper : MonoBehaviour
     {
         get
         {
-            return textMesh.text;
+            return _text;
         }
         set
         {
-            textMesh.text = value;
-            UpdateText();
+            if (value == _text)
+            {
+                return;
+            }
+            _text = value;
+            if (TextMesh != null)
+            {
+                UpdateText();
+            }
         }
     }
+    private string _text;
 
     /// <summary>
     /// The margin at the top.
@@ -46,7 +69,9 @@ public class TextMeshWrapper : MonoBehaviour
     {
         //Grab the parent and mesh
         parent = transform.parent.gameObject;
-        textMesh = gameObject.GetComponent<TextMesh>();
+        TextMesh mesh = gameObject.GetComponent<TextMesh>();
+        string startText = mesh.text;
+        TextMesh = mesh;
 
         //Sets the position of this object in relation to the parent
         float xPos = (parent.renderer.bounds.center.x - parent.renderer.bounds.extents.x) + SideMargins;
@@ -57,7 +82,11 @@ public class TextMeshWrapper : MonoBehaviour
         //Scale the textmesh is relation to the parent, so the text stays normal
         transform.localScale = new Vector3(transform.lossyScale.x / parent.transform.lossyScale.x, transform.lossyScale.y / parent.transform.lossyScale.y, transform.lossyScale.z / parent.transform.lossyScale.z);
 
-        UpdateText();
+        //If the text is not set, set the start text.
+        if (string.IsNullOrEmpty(Text))
+        {
+            Text = startText;
+        }
     }
 
     /// <summary>
@@ -69,14 +98,14 @@ public class TextMeshWrapper : MonoBehaviour
         float rowLimit = parent.renderer.bounds.extents.x - SideMargins; //find the sweet spot    
 
         //Wrap the text
-        string[] parts = textMesh.text.Replace(System.Environment.NewLine, "").Split(' ');
-        textMesh.text = "";
+        string[] parts = Text.Replace(System.Environment.NewLine, "").Split(' ');
+        TextMesh.text = "";
         foreach (string part in parts)
         {
-            textMesh.text += part + " ";
-            if (textMesh.renderer.bounds.extents.x > rowLimit)
+            TextMesh.text += part + " ";
+            if (TextMesh.renderer.bounds.extents.x > rowLimit)
             {
-                textMesh.text = textMesh.text.TrimEnd() + System.Environment.NewLine + part + " ";
+                TextMesh.text = TextMesh.text.Substring(0, TextMesh.text.Length - part.Length - 1) + System.Environment.NewLine + part + " ";
             }
         }
     }
