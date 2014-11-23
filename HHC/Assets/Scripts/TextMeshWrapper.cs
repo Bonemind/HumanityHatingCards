@@ -56,6 +56,8 @@ public class TextMeshWrapper : MonoBehaviour
 
         //Scale the textmesh is relation to the parent, so the text stays normal
         transform.localScale = new Vector3(transform.lossyScale.x / parent.transform.lossyScale.x, transform.lossyScale.y / parent.transform.lossyScale.y, transform.lossyScale.z / parent.transform.lossyScale.z);
+
+        UpdateText();
     }
 
     /// <summary>
@@ -67,9 +69,8 @@ public class TextMeshWrapper : MonoBehaviour
         float rowLimit = parent.renderer.bounds.extents.x - SideMargins; //find the sweet spot    
 
         //Wrap the text
-        string text = textMesh.text;
+        string[] parts = textMesh.text.Replace(System.Environment.NewLine, "").Split(' ');
         textMesh.text = "";
-        string[] parts = text.Split(' ');
         foreach (string part in parts)
         {
             textMesh.text += part + " ";
