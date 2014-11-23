@@ -13,13 +13,36 @@ public class TextMeshWrapper : MonoBehaviour
     /// </summary>
     GameObject parent;
 
+    /// <summary>
+    /// Get/set the text of the textmesh. This automatically updates the wrap.
+    /// </summary>
+    public string Text
+    {
+        get
+        {
+            return textMesh.text;
+        }
+        set
+        {
+            textMesh.text = value;
+            UpdateText();
+        }
+    }
+
+    /// <summary>
+    /// The margin at the top.
+    /// </summary>
     public float TopMargin = 0f;
+
+    /// <summary>
+    /// The margins on the sides.
+    /// </summary>
     public float SideMargins = 0f;
 
     /// <summary>
     /// Wrap the text on start
     /// </summary>
-    void Start()
+    public void Start()
     {
         //Grab the parent and mesh
         parent = transform.parent.gameObject;
@@ -33,24 +56,27 @@ public class TextMeshWrapper : MonoBehaviour
 
         //Scale the textmesh is relation to the parent, so the text stays normal
         transform.localScale = new Vector3(transform.lossyScale.x / parent.transform.lossyScale.x, transform.lossyScale.y / parent.transform.lossyScale.y, transform.lossyScale.z / parent.transform.lossyScale.z);
+    }
 
+    /// <summary>
+    /// Update the text.
+    /// </summary>
+    private void UpdateText()
+    {
         //Calculate how wide a line can be
         float rowLimit = parent.renderer.bounds.extents.x - SideMargins; //find the sweet spot    
 
         //Wrap the text
-        string builder = "";
+        string text = textMesh.text;
         textMesh.text = "";
-        string text = "This is some text we'll use to demonstrate word wrapping. It would be too easy if a proper wrapping was already implemented in Unity :)";
         string[] parts = text.Split(' ');
-        for (int i = 0; i < parts.Length; i++)
+        foreach (string part in parts)
         {
-            textMesh.text += parts[i] + " ";
+            textMesh.text += part + " ";
             if (textMesh.renderer.bounds.extents.x > rowLimit)
             {
-                textMesh.text = builder.TrimEnd() + System.Environment.NewLine + parts[i] + " ";
+                textMesh.text = textMesh.text.TrimEnd() + System.Environment.NewLine + part + " ";
             }
-            builder = textMesh.text;
         }
-
     }
 }
