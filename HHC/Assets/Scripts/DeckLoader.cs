@@ -13,8 +13,11 @@ public class DeckLoader : MonoBehaviour {
     /// <returns>The parsed deck</returns>
     public static Deck LoadDeck(string deckCode)
     {
-        string deckJson = LoadJsonFromApi("https://api.cardcastgame.com/v1/decks/" + deckCode + "/cards");
+        string deckJson = LoadJsonFromApi(ConfigManager.GetValue("CardListUrl").Replace("<DECK_CODE>", deckCode));
+        Debug.Log(deckJson);
+        Debug.Log("Loaded deck json");
         Deck deck = JsonConvert.DeserializeObject<Deck>(deckJson);
+        Debug.Log("Parsed json");
         return deck;
     }
     
@@ -26,16 +29,8 @@ public class DeckLoader : MonoBehaviour {
     /// <returns>String containing the contents of the url</returns>
     public static string LoadJsonFromApi(string url)
     {
-        ServicePointManager.ServerCertificateValidationCallback +=
-            (sender, cert, chain, sslPolicyErrors) => true;
-
-        WebRequest webRequest = WebRequest.Create(url);
-        WebResponse webResponse = webRequest.GetResponse();
-        Stream dataStream = webResponse.GetResponseStream();
-        StreamReader reader = new StreamReader(dataStream);
-        string deckJson = reader.ReadToEnd();
-        reader.Close();
-        webResponse.Close();
-        return deckJson;
+        WWW webreq = new WWW(url);
+        while (!webreq.isDone);
+        return webreq.text;
     }
 }
