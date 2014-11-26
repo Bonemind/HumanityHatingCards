@@ -47,7 +47,9 @@ public class ConfigManager
         {
             Debug.LogException(e);
             Debug.Log("Failed to read config, bailing!");
-            UnityEditor.EditorApplication.isPlaying = false;
+            #if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+            #endif
         }
     }
 

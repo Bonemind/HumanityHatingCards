@@ -18,4 +18,13 @@ public class Card {
     /// The creation timestamp
     /// </summary>
     public DateTime created_at;
+
+    /// <summary>
+    /// Formats this cards text for display
+    /// </summary>
+    /// <returns>The formatted cardtext</returns>
+    public string GetText()
+    {
+        return string.Join("____", text);
+    }
 }

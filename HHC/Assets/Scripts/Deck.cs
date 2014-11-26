@@ -5,10 +5,10 @@ public class Deck {
     /// <summary>
     /// The black cards
     /// </summary>
-    public List<Card> calls;
+    public List<Card> calls = new List<Card>();
 
     /// <summary>
     /// The white cards
     /// </summary>
-    public List<Card> responses;
+    public List<Card> responses = new List<Card>();
 }

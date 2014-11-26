@@ -31,7 +31,7 @@ public class TextMeshWrapper : MonoBehaviour
     /// <summary>
     /// Get/set the text of the textmesh. This automatically updates the wrap.
     /// </summary>
-    public string Text
+    private string Text
     {
         get
         {
@@ -51,6 +51,27 @@ public class TextMeshWrapper : MonoBehaviour
         }
     }
     private string _text;
+
+    /// <summary>
+    /// The card to display on this textmesh
+    /// </summary>
+    public Card card
+    {
+        get
+        {
+            return _card;
+        }
+        set
+        {
+            if (value == _card)
+            {
+                return;
+            }
+            _card = value;
+            _text = card.GetText();
+        }
+    }
+    private Card _card;
 
     /// <summary>
     /// The margin at the top.
