@@ -12,8 +12,17 @@ public class Player {
     /// </summary>
     private List<Card> hand = new List<Card>();
 
+    /// <summary>
+    /// Holds the panel that displays cards
+    /// Since this is not a monobehaviour this should be set by the gamemanager 
+    /// or some other object
+    /// </summary>
     public GameObject HandDisplayPanel;
 
+    /// <summary>
+    /// Holds the white card prefab
+    /// Still not a monobehaviour, see above
+    /// </summary>
     public GameObject WhiteCardPrefab;
 
     /// <summary>
@@ -45,12 +54,13 @@ public class Player {
         return hand;
     }
 
+    /// <summary>
+    /// Updates the planel containing the cards of a player
+    /// </summary>
     private void UpdateHandDisplay()
     {
-
         if (HandDisplayPanel == null)
         {
-            Debug.Log("Handdisplaypanel null");
             return;
         }
         foreach (Transform child in HandDisplayPanel.transform)
