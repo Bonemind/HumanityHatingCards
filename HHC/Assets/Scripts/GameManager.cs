@@ -210,7 +210,6 @@ public class GameManager : MonoBehaviour
     public void InitializeRoundStage()
     {
         playedCards.Clear();
-        ClearWhiteCards();
         cardCzarIndex = (cardCzarIndex + 1) % playerList.Count;
         Card currBlackCard = deck.calls[Random.Range(0, deck.calls.Count)];
         deck.calls.Remove(currBlackCard);
@@ -227,21 +226,10 @@ public class GameManager : MonoBehaviour
 
         //We need to play 1 less than the number of entries in a card
         CardsToPlay = Mathf.Max(currBlackCard.text.Length - 1, 1);
-        DisplayCards();
 
         currState = GameState.PLAYING_CARDS;
     }
 
-    /// <summary>
-    /// Cleans up all white cards
-    /// </summary>
-    public void ClearWhiteCards()
-    {
-        foreach (GameObject go in GameObject.FindGameObjectsWithTag("WhiteCard"))
-        {
-            Destroy(go);
-        }
-    }
     /// <summary>
     /// Handles the initialization of a winner stage
     /// </summary>
@@ -331,7 +319,7 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Dumps all cards on the screen
+    /// Displays the cards that were played
     /// </summary>
     public void DisplayCards()
     {
