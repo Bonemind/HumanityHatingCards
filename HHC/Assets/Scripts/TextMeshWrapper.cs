@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class TextMeshWrapper : MonoBehaviour
+public class TextMeshWrapper2 : MonoBehaviour
 {
     /// <summary>
     /// The textmesh to wrap the text of

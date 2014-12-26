@@ -43,7 +43,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// The gameobject representing the current black card
     /// </summary>
-    public GameObject currBlackCardObject;
+    public GameObject BlackCardObject;
 
     /// <summary>
     /// The number of cards each player should play
@@ -65,6 +65,16 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public int StartingCardAmount;
 
+    /// <summary>
+    /// The panel that will display the current hand of the player
+    /// </summary>
+    public GameObject DisplayCardPanel;
+
+    /// <summary>
+    /// The panel to display the hand of the player in
+    /// </summary>
+    public GameObject HandPanel;
+
     public void Start()
     {
         playedCards = new Dictionary<Player, List<Card>>();
@@ -72,7 +82,11 @@ public class GameManager : MonoBehaviour
         deck = new Deck();
         playerList = new List<Player>();
 
+        //Debug stuff
+        //TODO: Remove
         addDebugPlayers();
+        playerList[1].HandDisplayPanel = HandPanel;
+        playerList[1].WhiteCardPrefab = WhiteCardPrefab;
 
         cardCzarIndex = 0;
         currState = GameState.PLAYING_CARDS;
@@ -200,16 +214,20 @@ public class GameManager : MonoBehaviour
         cardCzarIndex = (cardCzarIndex + 1) % playerList.Count;
         Card currBlackCard = deck.calls[Random.Range(0, deck.calls.Count)];
         deck.calls.Remove(currBlackCard);
-        if (currBlackCardObject != null)
+        if (BlackCardObject != null)
         {
-            Destroy(currBlackCardObject);
-            currBlackCardObject = null;
+            BlackCardObject.GetComponentInChildren<UnityEngine.UI.Text>().text = currBlackCard.GetText();
         }
 
-        currBlackCardObject = (GameObject)GameObject.Instantiate(BlackCardPrefab);
-        currBlackCardObject.GetComponentInChildren<TextMeshWrapper>().card = currBlackCard;
+        //Clean up cards of previous round
+        foreach (Transform child in DisplayCardPanel.transform)
+        {
+            Destroy(child.gameObject);
+        }
 
+        //We need to play 1 less than the number of entries in a card
         CardsToPlay = Mathf.Max(currBlackCard.text.Length - 1, 1);
+        DisplayCards();
 
         currState = GameState.PLAYING_CARDS;
     }
@@ -322,8 +340,8 @@ public class GameManager : MonoBehaviour
             foreach (Card c in playedPair.Value)
             {
                 GameObject whiteCard = (GameObject)Instantiate(WhiteCardPrefab);
-                TextMeshWrapper tmw = whiteCard.GetComponentInChildren<TextMeshWrapper>();
-                tmw.card = c;
+                whiteCard.GetComponent<CardWrapper>().card = c;
+                whiteCard.transform.SetParent(DisplayCardPanel.transform);
             }
         }
     }

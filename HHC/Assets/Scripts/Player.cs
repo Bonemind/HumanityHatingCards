@@ -12,6 +12,10 @@ public class Player {
     /// </summary>
     private List<Card> hand = new List<Card>();
 
+    public GameObject HandDisplayPanel;
+
+    public GameObject WhiteCardPrefab;
+
     /// <summary>
     /// Adds a card to the players hand
     /// </summary>
@@ -19,6 +23,7 @@ public class Player {
     public void AddCard(Card card)
     {
         hand.Add(card);
+        UpdateHandDisplay();
     }
 
     /// <summary>
@@ -28,6 +33,7 @@ public class Player {
     public void RemoveCard(Card card)
     {
         hand.Remove(card);
+        UpdateHandDisplay();
     }
 
     /// <summary>
@@ -37,5 +43,27 @@ public class Player {
     public List<Card> GetHand()
     {
         return hand;
+    }
+
+    private void UpdateHandDisplay()
+    {
+
+        if (HandDisplayPanel == null)
+        {
+            Debug.Log("Handdisplaypanel null");
+            return;
+        }
+        foreach (Transform child in HandDisplayPanel.transform)
+        {
+            GameObject.Destroy(child.gameObject);
+        }
+
+        foreach (Card c in hand)
+        {
+            GameObject go = (GameObject) GameObject.Instantiate(WhiteCardPrefab);
+            go.GetComponent<CardWrapper>().card = c;
+            go.transform.SetParent(HandDisplayPanel.transform);
+        }
+
     }
 }
